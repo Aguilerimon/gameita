@@ -59,6 +59,8 @@ def Obtenerjugadores(appid, estado):
 
 data_steam = pd.read_csv("steamspy_data.csv")
 
+print(os.environ['TOKEN'])
+
 arreglo_nombre = []
 arreglo_jugadores = []
 
