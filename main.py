@@ -20,7 +20,7 @@ def Obtenerjugadores(appid, estado):
         arreglo_nombre.clear()
         arreglo_jugadores.clear()
 
-        key = "F45F2383BB5B9BDBFEC5C4B69D62B826"
+        key = os.environ['TOKEN']
         url = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?key=" + key
 
         parametros = {"appid": appid}
