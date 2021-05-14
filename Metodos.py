@@ -1,4 +1,3 @@
-
 import time
 from ssl import SSLError
 import pandas as pd

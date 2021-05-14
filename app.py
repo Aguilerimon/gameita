@@ -75,7 +75,7 @@ external_stylesheets = [
 
 server = Flask(__name__)
 server.secret_key = os.environ.get('secret_key', 'secret')
-app = dash.Dash(name=__name__, server=server)
+app = dash.Dash(name = __name__, server = server)
 app.config.supress_callback_exceptions = True
 app.title = "Steam Player Analytics: Know the game"
 
