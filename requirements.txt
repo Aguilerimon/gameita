@@ -1,4 +1,7 @@
-dash
-pandas
-plotly
+dash~=1.20.0
+pandas~=1.2.3
+plotly~=4.14.3
 gunicorn
+Flask~=1.1.2
+numpy~=1.20.1
+requests~=2.25.1
