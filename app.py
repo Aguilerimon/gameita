@@ -2,10 +2,10 @@ import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import flask
 import pandas as pd
 import plotly.express as px
 from dash.dependencies import Input, Output
-from flask import Flask
 import Metodos as st
 
 
@@ -73,10 +73,8 @@ external_stylesheets = [
     },
 ]
 
-server = Flask(__name__)
-server.secret_key = os.environ.get('secret_key', 'secret')
-app = dash.Dash(name = __name__, server = server)
-app.config.supress_callback_exceptions = True
+server = flask.Flask(__name__) # define flask app.server
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets, server=server) # call flask server
 app.title = "Steam Player Analytics: Know the game"
 
 # ------------------------------LAYOUT---------------------------------------------
