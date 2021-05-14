@@ -1,21 +1,21 @@
 import os
-
 import dash
-from dash.dependencies import Input, Output
-import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
+import plotly.express as px
+from dash.dependencies import Input, Output
+from flask import Flask
 import Metodos as st
 
 
-def Obtenernombre(appid):
+def obtenernombre(appid):
     nombre = data_steam[data_steam['appid'] == int(appid)]['name']
     for val in nombre:
         return val
 
 
-def Obtenerjugadores(appid, estado):
+def obtenerjugadores(appid, estado):
     if estado == 1:
         arreglo_nombre.clear()
         arreglo_jugadores.clear()
@@ -31,7 +31,7 @@ def Obtenerjugadores(appid, estado):
         df_steamspy = pd.DataFrame.from_dict(respuesta_json, orient='index')
 
         arreglo_jugadores.append(int(df_steamspy.iloc[0]['player_count']))
-        arreglo_nombre.append(Obtenernombre(appid))
+        arreglo_nombre.append(obtenernombre(appid))
 
         df = pd.DataFrame({'juegos': arreglo_nombre,
                            'jugadores': arreglo_jugadores})
@@ -49,7 +49,7 @@ def Obtenerjugadores(appid, estado):
         df_steamspy = pd.DataFrame.from_dict(respuesta_json, orient='index')
 
         arreglo_jugadores.append(int(df_steamspy.iloc[0]['player_count']))
-        arreglo_nombre.append(Obtenernombre(appid))
+        arreglo_nombre.append(obtenernombre(appid))
 
         df = pd.DataFrame({'juegos': arreglo_nombre,
                            'jugadores': arreglo_jugadores})
@@ -58,8 +58,6 @@ def Obtenerjugadores(appid, estado):
 
 
 data_steam = pd.read_csv("steamspy_data.csv")
-
-print(os.environ['TOKEN'])
 
 arreglo_nombre = []
 arreglo_jugadores = []
@@ -75,7 +73,10 @@ external_stylesheets = [
     },
 ]
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = Flask(__name__)
+server.secret_key = os.environ.get('secret_key', 'secret')
+app = dash.Dash(name=__name__, server=server)
+app.config.supress_callback_exceptions = True
 app.title = "Steam Player Analytics: Know the game"
 
 # ------------------------------LAYOUT---------------------------------------------
@@ -87,7 +88,8 @@ app.layout = html.Div(
                     children="Gamelytics", className="header-title"
                 ),
                 html.P(
-                    children="En base a videojuegos conocidos te mostraremos la cantidad de jugadores en tiempo real para que puedas ver si es viable o no para comprar el videojuego online.",
+                    children="En base a videojuegos conocidos te mostraremos la cantidad de jugadores en tiempo real "
+                             "para que puedas ver si es viable o no para comprar el videojuego online.",
                     className="header-description",
                 ),
             ],
@@ -118,7 +120,6 @@ app.layout = html.Div(
             className="wrapper",
         ),
 
-
     ])
 
 
@@ -136,12 +137,8 @@ def update_bar_chart(value, n_clicks):
     if 'submit-val' in changed_id:
         val = 1
         valorTemp = 10
-        fig1 = px.bar(Obtenerjugadores(valorTemp, val), x='juegos', y='jugadores')
+        fig1 = px.bar(obtenerjugadores(valorTemp, val), x='juegos', y='jugadores')
     else:
-        fig1 = px.bar(Obtenerjugadores(valor, val), x='juegos', y='jugadores')
+        fig1 = px.bar(obtenerjugadores(valor, val), x='juegos', y='jugadores')
 
     return fig1
-
-
-if __name__ == "__main__":
-    app.run_server(debug=True)
